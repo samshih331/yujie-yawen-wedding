@@ -3,115 +3,130 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-  <title>Wedding Invitation</title>
+  <title>我們要結婚了</title>
   <meta name="description" content="婚禮邀請 · 桌次查詢">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Allura&family=Bodoni+Moda:ital,wght@0,400;0,500;1,400&family=Cormorant+Garamond:ital,wght@0,400;0,500;1,400&family=Noto+Serif+TC:wght@300;400;500&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=LXGW+WenKai+TC:wght@400;700&family=Noto+Sans+TC:wght@400;500;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="style.css">
-  <script src="config.js"></script>
-  <script>
-    // 主題：網址 ?theme=forest|latte|night 優先，否則用 config.js 的 theme
-    (function () {
-      var t = new URLSearchParams(location.search).get('theme') || (window.WEDDING || {}).theme;
-      if (['forest', 'latte', 'night'].indexOf(t) !== -1) document.documentElement.dataset.theme = t;
-    })();
-  </script>
 </head>
 <body>
 
-  <!-- 封面 -->
-  <header class="cover">
-    <div class="cover-wrap">
-      <div class="cover-card">
-        <div class="cover-head">
-          <h1><span data-cfg="groomEn"></span><span>&amp; <b data-cfg="brideEn"></b></span></h1>
-          <div>
-            <p data-cfg="dateText"></p>
-            <em>We're getting married</em>
-          </div>
-        </div>
-        <div class="cover-photo">
-          <!-- 主視覺照片放在 assets/photo.jpg -->
-          <img src="assets/photo.jpg" alt="婚紗照" onerror="this.parentNode.classList.add('empty')">
-        </div>
-      </div>
-    </div>
-    <a class="scroll-hint" href="#welcome">Scroll</a>
-  </header>
+  <!-- 圖示：腳印、愛心（自製 SVG，各裝置外觀一致） -->
+  <svg width="0" height="0" style="position:absolute" aria-hidden="true">
+    <symbol id="paw" viewBox="0 0 40 40">
+      <ellipse cx="20" cy="27" rx="9" ry="7.5"/>
+      <ellipse cx="9" cy="16" rx="3.6" ry="4.6" transform="rotate(-18 9 16)"/>
+      <ellipse cx="16" cy="10" rx="3.6" ry="4.8" transform="rotate(-6 16 10)"/>
+      <ellipse cx="24" cy="10" rx="3.6" ry="4.8" transform="rotate(6 24 10)"/>
+      <ellipse cx="31" cy="16" rx="3.6" ry="4.6" transform="rotate(18 31 16)"/>
+    </symbol>
+    <symbol id="heart" viewBox="0 0 32 30">
+      <path d="M16 28S2 19.5 2 10.2C2 5.6 5.6 2 10 2c2.6 0 4.8 1.3 6 3.3C17.2 3.3 19.4 2 22 2c4.4 0 8 3.6 8 8.2C30 19.5 16 28 16 28z"/>
+    </symbol>
+  </svg>
 
-  <main>
-    <!-- 邀請 -->
-    <section class="section band" id="welcome">
-      <div class="col welcome">
-        <h2 class="reveal">Welcome<br>to our<br>wedding</h2>
-        <p class="sub reveal d1">Together with our families,<br>we invite you to celebrate with us.</p>
-        <p class="couple reveal d2"><span data-cfg="groom"></span><i>&amp;</i><span data-cfg="bride"></span></p>
-        <p class="parents reveal d2" id="parents">
-          <small>男方家長</small><span data-cfg="groomParents"></span><br>
-          <small>女方家長</small><span data-cfg="brideParents"></span>
-        </p>
-        <p class="date reveal d3" data-cfg="dateText"></p>
-        <p class="dow reveal d3" data-cfg="dowText"></p>
-        <div class="timeline reveal d4" id="timeline"></div>
-        <p class="venue reveal d4"><span data-cfg="venue"></span><small data-cfg="hall"></small></p>
+  <!-- 現場查詢模式（?seat）才出現的頂列 -->
+  <div class="seat-bar">
+    <span><span data-cfg="groom"></span> <svg class="ic-heart"><use href="#heart"/></svg> <span data-cfg="bride"></span> 的婚禮</span>
+    <a id="full-link">看完整邀請 →</a>
+  </div>
+
+  <main class="trail">
+    <!-- 封面 -->
+    <section class="stop hero">
+      <div class="hearts" aria-hidden="true">
+        <svg><use href="#heart"/></svg><svg><use href="#heart"/></svg><svg><use href="#heart"/></svg><svg><use href="#heart"/></svg><svg><use href="#heart"/></svg>
+      </div>
+      <p class="hand hello">我們要結婚了！</p>
+      <figure class="polaroid">
+        <span class="tape" aria-hidden="true"></span>
+        <img src="assets/photo.jpg" alt="婚紗照" width="1400" height="2100">
+        <figcaption class="hand">在森林裡，說好了一輩子</figcaption>
+      </figure>
+      <h1 class="couple hand">
+        <span data-cfg="groom"></span>
+        <svg class="ic-heart"><use href="#heart"/></svg>
+        <span data-cfg="bride"></span>
+      </h1>
+      <p class="invite">一路走來，我們把彼此放進生命裡，<br>也決定把未來交給對方。<br>想邀請最重要的你，一起來見證。</p>
+    </section>
+
+    <!-- 日子 -->
+    <section class="stop" id="date">
+      <svg class="node"><use href="#paw"/></svg>
+      <h2 class="hand">那一天</h2>
+      <div class="cal" id="cal" aria-label="月曆">
+        <p class="cal-title hand" id="cal-title"></p>
+        <div class="cal-grid" id="cal-grid"></div>
+      </div>
+      <p class="when"><b data-cfg="dateText"></b>　<span data-cfg="dowText"></span></p>
+      <ul class="plan" id="plan"></ul>
+
+      <!-- 翻頁倒數 -->
+      <p class="cd-label hand" id="cd-label">倒數</p>
+      <div class="cd-row" id="countdown">
+        <div class="cd-unit"><div class="cd-tile"><b data-u="d">0</b></div><span>天</span></div>
+        <div class="cd-unit"><div class="cd-tile"><b data-u="h">0</b></div><span>時</span></div>
+        <div class="cd-unit"><div class="cd-tile"><b data-u="m">0</b></div><span>分</span></div>
+        <div class="cd-unit"><div class="cd-tile"><b data-u="s">0</b></div><span>秒</span></div>
       </div>
     </section>
 
-    <!-- 倒數 -->
-    <section class="section surface countdown">
-      <div class="col">
-        <p class="eyebrow reveal">Counting down</p>
-        <div class="cd-row reveal d1" id="countdown">
-          <div class="cd-unit"><div class="cd-tile"><b data-u="d">0</b></div><span>Days</span></div>
-          <div class="cd-unit"><div class="cd-tile"><b data-u="h">0</b></div><span>Hours</span></div>
-          <div class="cd-unit"><div class="cd-tile"><b data-u="m">0</b></div><span>Mins</span></div>
-          <div class="cd-unit"><div class="cd-tile"><b data-u="s">0</b></div><span>Secs</span></div>
-        </div>
-        <p class="cd-msg reveal d2" id="cd-msg">期待與您相見</p>
-      </div>
+    <!-- 地點：路徑旁的註記，不做卡片 -->
+    <section class="stop" id="place">
+      <svg class="node"><use href="#paw"/></svg>
+      <h2 class="hand">怎麼去</h2>
+      <p class="venue hand" data-cfg="venue"></p>
+      <p class="addr"><a id="addr-link" target="_blank" rel="noopener"><span data-cfg="address"></span> <span data-cfg="hall"></span></a></p>
+      <p class="tel" id="tel-row">電話　<a id="tel-link" data-cfg="phone"></a></p>
+      <dl class="notes" id="notes"></dl>
+      <button class="map-thumb" id="map-open" type="button" aria-label="放大交通資訊圖">
+        <img src="assets/map.jpg" alt="交通資訊圖" loading="lazy" onerror="this.closest('.map-thumb').remove()">
+        <span class="hint">點我放大</span>
+      </button>
+      <a class="pill" id="map-link" target="_blank" rel="noopener">打開 Google 地圖</a>
     </section>
 
-    <!-- 地點 -->
-    <section class="section band" id="location">
-      <div class="col loc">
-        <h2 class="reveal">Location</h2>
-        <p class="loc-venue reveal d1" data-cfg="venue"></p>
-        <p class="loc-addr reveal d1"><span data-cfg="address"></span> <span data-cfg="hall"></span><br><a id="tel-link">TEL <span data-cfg="phone"></span></a></p>
-        <!-- 交通圖放在 assets/map.jpg（沒有就自動隱藏） -->
-        <img class="loc-map reveal d2" src="assets/map.jpg" alt="交通資訊" onerror="this.remove()">
-        <ul class="transport reveal d2" id="transport"></ul>
-        <a class="btn reveal d3" id="map-link" target="_blank" rel="noopener">開啟 Google 地圖</a>
-      </div>
-    </section>
-
-
-    <!-- 查詢桌次 -->
-    <section class="section plain seat" id="seat">
-      <div class="col">
-        <p class="eyebrow reveal">Find your seat</p>
-        <h2 class="reveal d1">查詢桌次</h2>
-        <p class="seat-desc reveal d1">
-          輸入您的姓名，即可找到婚禮當天的座位。<br>
-          姓名後方有「共 N 位」代表您與家人同桌。
-        </p>
-        <form class="seat-form reveal d2" id="seat-form" autocomplete="off">
-          <input id="seat-q" type="search" inputmode="text" placeholder="請輸入姓名（可輸入部分）" aria-label="姓名">
-          <button type="submit">查詢</button>
-        </form>
-        <p class="seat-meta" id="seat-meta" aria-live="polite"></p>
+    <!-- 查詢座位 -->
+    <section class="stop seat" id="seat">
+      <svg class="node"><use href="#paw"/></svg>
+      <h2 class="hand">找找你的座位</h2>
+      <p class="seat-desc">輸入你的名字（打一部分也可以），<br>就能知道婚禮當天坐在第幾桌。</p>
+      <form class="seat-form" id="seat-form" autocomplete="off">
+        <input id="seat-q" type="search" placeholder="例如：王小明" aria-label="姓名">
+        <button type="submit">查詢</button>
+      </form>
+      <p class="seat-meta" id="seat-meta" aria-live="polite"></p>
+      <div class="card" id="card" hidden>
+        <p class="card-title">婚宴報到卡</p>
         <ul class="seat-list" id="seat-list"></ul>
       </div>
     </section>
+
+    <footer class="stop end">
+      <svg class="node"><use href="#paw"/></svg>
+      <p class="hand">謝謝你來 <svg class="ic-heart"><use href="#heart"/></svg></p>
+      <p class="sign"><span data-cfg="groom"></span> &amp; <span data-cfg="bride"></span> 敬邀</p>
+
+      <!-- 哈利 -->
+      <figure class="harry">
+        <span class="tape" aria-hidden="true"></span>
+        <img src="assets/harry.jpg" alt="哈利" width="900" height="1200" loading="lazy">
+        <figcaption class="hand">哈利</figcaption>
+      </figure>
+      <p class="harry-note hand">一路上的小腳印，<br>是哈利陪我們走過的路。<br>這一天，牠也一起來了 <svg class="ic-paw"><use href="#paw"/></svg></p>
+    </footer>
   </main>
 
-  <footer class="footer">
-    <p class="script">Thank you</p>
-    <p data-cfg-pair></p>
-  </footer>
+  <dialog class="lightbox" id="map-dialog">
+    <form method="dialog"><button class="lb-close" aria-label="關閉">✕</button></form>
+    <img src="assets/map.jpg" alt="交通資訊圖">
+  </dialog>
 
+  <script src="config.js"></script>
   <script src="seating.js"></script>
   <script src="common.js"></script>
-  <script src="app.js"></script>
+  <script src="main.js"></script>
 </body>
 </html>

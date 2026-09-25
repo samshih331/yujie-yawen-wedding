@@ -46,23 +46,32 @@
     document.getElementById('plan').appendChild(li);
   });
 
-  // ── 印章倒數（依婚期動態計算）──
-  var stamp = document.getElementById('stamp');
+  // ── 翻頁倒數（依婚期動態計算）──
+  var label = document.getElementById('cd-label');
+  var row = document.getElementById('countdown');
+  var tiles = {};
+  row.querySelectorAll('b').forEach(function (b) { tiles[b.dataset.u] = b; });
+  function setTile(u, v) {
+    var s = String(v).padStart(2, '0');
+    if (tiles[u].textContent === s) return;
+    tiles[u].textContent = s;
+    tiles[u].classList.remove('flip');
+    void tiles[u].offsetWidth; // 重新觸發翻頁動畫
+    tiles[u].classList.add('flip');
+  }
   function tick() {
     var c = W.countdown();
-    stamp.classList.remove('wide');
-    if (c.phase === 'before') {
-      stamp.innerHTML = '<small>倒數</small><b></b><small>天</small>';
-      stamp.querySelector('b').textContent = c.calDays;
-    } else if (c.phase === 'today') {
-      stamp.classList.add('wide');
-      stamp.innerHTML = '就是<br>今天！';
-    } else {
-      stamp.classList.add('wide');
-      stamp.innerHTML = '謝謝<br>你來！';
+    if (c.phase === 'after' || c.done) {
+      label.textContent = c.phase === 'after' ? '謝謝你來參加我們的婚禮！' : '婚宴開始囉！';
+      row.classList.add('hide');
       return;
     }
-    setTimeout(tick, 60000);
+    label.textContent = c.phase === 'today' ? '就是今天！開席倒數' : '倒數';
+    setTile('d', c.d);
+    setTile('h', c.h);
+    setTile('m', c.m);
+    setTile('s', c.s);
+    setTimeout(tick, 1000);
   }
   tick();
 

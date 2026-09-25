@@ -27,7 +27,4 @@ window.WEDDING = {
     { title: "公車", text: "順安街站（步行 6 分鐘）、捷運大坪林站（步行 5 分鐘）、民權路口（步行 5 分鐘）" },
     { title: "開車", text: "進入北新路三段 211 巷，台北矽谷二期大樓，靚點地下停車場" },
   ],
-
-  // 出席調查表單（留空就不顯示按鈕）
-  rsvpUrl: "https://docs.google.com/forms/d/e/1FAIpQLSfBD3u9sEvcnuq7imWKac_DFfFSXuMpcyD1UdzFnjplTQlZng/viewform",
 };

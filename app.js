@@ -37,10 +37,6 @@
   if (C.phone) tel.href = 'tel:' + C.phone.replace(/[^\d+]/g, '');
   else tel.remove();
 
-  var rsvp = document.getElementById('rsvp-link');
-  if (C.rsvpUrl) rsvp.href = C.rsvpUrl;
-  else document.getElementById('rsvp').remove();
-
   document.getElementById('map-link').href =
     'https://www.google.com/maps/search/?api=1&query=' + encodeURIComponent(C.mapQuery || C.venue || '');
 

@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Wedding Invitation</title>
+  <meta name="description" content="婚禮邀請 · 桌次查詢">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Allura&family=Bodoni+Moda:ital,wght@0,400;0,500;1,400&family=Cormorant+Garamond:ital,wght@0,400;0,500;1,400&family=Noto+Serif+TC:wght@300;400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <!-- 封面 -->
+  <header class="cover">
+    <div class="cover-wrap">
+      <div class="cover-card">
+        <div class="cover-head">
+          <h1><span data-cfg="groomEn"></span><span>&amp; <b data-cfg="brideEn"></b></span></h1>
+          <div>
+            <p data-cfg="dateText"></p>
+            <em>We're getting married</em>
+          </div>
+        </div>
+        <div class="cover-photo">
+          <!-- 主視覺照片放在 assets/photo.jpg -->
+          <img src="assets/photo.jpg" alt="婚紗照" onerror="this.parentNode.classList.add('empty')">
+        </div>
+      </div>
+    </div>
+    <a class="scroll-hint" href="#welcome">Scroll</a>
+  </header>
+
+  <main>
+    <!-- 邀請 -->
+    <section class="section sage" id="welcome">
+      <div class="col welcome">
+        <h2 class="reveal">Welcome<br>to our<br>wedding</h2>
+        <p class="sub reveal d1">Together with our families,<br>we invite you to celebrate with us.</p>
+        <p class="couple reveal d2"><span data-cfg="groom"></span><i>&amp;</i><span data-cfg="bride"></span></p>
+        <p class="parents reveal d2" id="parents">
+          <small>男方家長</small><span data-cfg="groomParents"></span><br>
+          <small>女方家長</small><span data-cfg="brideParents"></span>
+        </p>
+        <p class="date reveal d3" data-cfg="dateText"></p>
+        <p class="dow reveal d3" data-cfg="dowText"></p>
+        <div class="timeline reveal d4" id="timeline"></div>
+        <p class="venue reveal d4"><span data-cfg="venue"></span><small data-cfg="hall"></small></p>
+      </div>
+    </section>
+
+    <!-- 倒數 -->
+    <section class="section white countdown">
+      <div class="col">
+        <p class="eyebrow reveal">Counting down</p>
+        <div class="cd-row reveal d1" id="countdown">
+          <div class="cd-unit"><div class="cd-tile"><b data-u="d">0</b></div><span>Days</span></div>
+          <div class="cd-unit"><div class="cd-tile"><b data-u="h">0</b></div><span>Hours</span></div>
+          <div class="cd-unit"><div class="cd-tile"><b data-u="m">0</b></div><span>Mins</span></div>
+          <div class="cd-unit"><div class="cd-tile"><b data-u="s">0</b></div><span>Secs</span></div>
+        </div>
+        <p class="cd-msg reveal d2" id="cd-msg">期待與您相見</p>
+      </div>
+    </section>
+
+    <!-- 地點 -->
+    <section class="section sage" id="location">
+      <div class="col loc">
+        <h2 class="reveal">Location</h2>
+        <p class="loc-venue reveal d1" data-cfg="venue"></p>
+        <p class="loc-addr reveal d1"><span data-cfg="address"></span> <span data-cfg="hall"></span><br><a id="tel-link">TEL <span data-cfg="phone"></span></a></p>
+        <!-- 交通圖放在 assets/map.jpg（沒有就自動隱藏） -->
+        <img class="loc-map reveal d2" src="assets/map.jpg" alt="交通資訊" onerror="this.remove()">
+        <ul class="transport reveal d2" id="transport"></ul>
+        <a class="btn reveal d3" id="map-link" target="_blank" rel="noopener">開啟 Google 地圖</a>
+      </div>
+    </section>
+
+    <!-- 出席調查 -->
+    <section class="section white rsvp" id="rsvp">
+      <div class="col">
+        <p class="eyebrow reveal">R.S.V.P.</p>
+        <h2 class="reveal d1">出席調查</h2>
+        <p class="rsvp-desc reveal d1">
+          你的到來，會讓這天更圓滿更溫暖。<br>
+          請協助填寫出席資訊，方便我們安排座位與餐點。
+        </p>
+        <a class="btn btn-tan reveal d2" id="rsvp-link" target="_blank" rel="noopener">填寫出席資訊</a>
+      </div>
+    </section>
+
+    <!-- 查詢桌次 -->
+    <section class="section ivory seat" id="seat">
+      <div class="col">
+        <p class="eyebrow reveal">Find your seat</p>
+        <h2 class="reveal d1">查詢桌次</h2>
+        <p class="seat-desc reveal d1">
+          輸入您的姓名，即可找到婚禮當天的座位。<br>
+          姓名後方有「共 N 位」代表您與家人同桌。
+        </p>
+        <form class="seat-form reveal d2" id="seat-form" autocomplete="off">
+          <input id="seat-q" type="search" inputmode="text" placeholder="請輸入姓名（可輸入部分）" aria-label="姓名">
+          <button type="submit">查詢</button>
+        </form>
+        <p class="seat-meta" id="seat-meta" aria-live="polite"></p>
+        <ul class="seat-list" id="seat-list"></ul>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <p class="script">Thank you</p>
+    <p data-cfg-pair></p>
+  </footer>
+
+  <script src="config.js"></script>
+  <script src="seating.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>

@@ -1,12 +1,8 @@
 (function () {
-  var C = window.WEDDING || {};
-  var SEATING = window.SEATING || [];
+  var W = window.Wedding;
+  var C = W.config;
 
-  // ── 把 config.js 的內容填進頁面 ──
-  document.querySelectorAll('[data-cfg]').forEach(function (el) {
-    var v = C[el.getAttribute('data-cfg')];
-    if (v != null) el.textContent = v;
-  });
+  W.fill();
   document.querySelectorAll('[data-cfg-pair]').forEach(function (el) {
     el.textContent = (C.groom || '') + ' & ' + (C.bride || '');
   });
@@ -34,11 +30,10 @@
   if (!C.groomParents && !C.brideParents) document.getElementById('parents').remove();
 
   var tel = document.getElementById('tel-link');
-  if (C.phone) tel.href = 'tel:' + C.phone.replace(/[^\d+]/g, '');
+  if (C.phone) tel.href = W.telUrl();
   else tel.remove();
 
-  document.getElementById('map-link').href =
-    'https://www.google.com/maps/search/?api=1&query=' + encodeURIComponent(C.mapQuery || C.venue || '');
+  document.getElementById('map-link').href = W.mapUrl();
 
   // ── 捲動淡入 ──
   var io = 'IntersectionObserver' in window ? new IntersectionObserver(function (entries) {
@@ -77,58 +72,22 @@
   }
   if (!isNaN(target)) tick();
 
-  // ── 桌次查詢 ──
-  // 正規化：去空白、全形轉半形、台/臺視為同字，避免賓客打字習慣不同查不到
-  function norm(s) {
-    return String(s)
-      .replace(/[！-～]/g, function (c) { return String.fromCharCode(c.charCodeAt(0) - 0xFEE0); })
-      .replace(/\s+/g, '')
-      .replace(/臺/g, '台')
-      .toLowerCase();
-  }
-  var index = SEATING.map(function (g) {
-    return { g: g, keys: String(g.name).split(/\s+/).map(norm) };
-  });
-  var totalGuests = SEATING.reduce(function (n, g) { return n + (g.count || 1); }, 0);
-  function tableOrder(t) { return t === '主桌' ? -1 : Number(t) || 999; }
-
+  // ── 桌次查詢（查詢邏輯在 common.js）──
   var form = document.getElementById('seat-form');
   var input = document.getElementById('seat-q');
   var meta = document.getElementById('seat-meta');
   var list = document.getElementById('seat-list');
 
   function search() {
-    var q = norm(input.value);
+    var r = W.find(input.value);
     list.innerHTML = '';
-    if (!q) { meta.textContent = ''; return; }
-    if (!SEATING.length) {
-      meta.textContent = '座位表整理中，婚禮前會開放查詢，敬請期待';
-      return;
-    }
+    meta.textContent = r.message;
 
-    var hits = index.filter(function (r) {
-      return r.keys.some(function (k) { return k.indexOf(q) !== -1; });
-    }).map(function (r) { return r.g; });
-
-    // 完全相符的排最前面，其餘依桌次排序
-    hits.sort(function (a, b) {
-      var ea = norm(a.name.split(/\s+/)[0]) === q ? 0 : 1;
-      var eb = norm(b.name.split(/\s+/)[0]) === q ? 0 : 1;
-      return ea - eb || tableOrder(a.table) - tableOrder(b.table);
-    });
-
-    if (!hits.length) {
-      meta.textContent = '查無「' + input.value.trim() + '」，請確認姓名或洽詢現場招待人員';
-      return;
-    }
-    var guests = hits.reduce(function (n, g) { return n + (g.count || 1); }, 0);
-    meta.textContent = '找到 ' + hits.length + ' 筆結果（共 ' + guests + ' 位賓客）';
-
-    hits.forEach(function (g) {
+    r.hits.forEach(function (g) {
       var li = document.createElement('li');
       var name = document.createElement('span');
       name.className = 'nm';
-      name.textContent = g.name.split(/\s+/)[0];
+      name.textContent = W.displayName(g);
       if (g.count > 1) {
         var badge = document.createElement('em');
         badge.textContent = '共 ' + g.count + ' 位';
@@ -156,8 +115,7 @@
   input.addEventListener('input', search);
 
   // 現場 QR code 可以指向 ...?seat 或 ...#seat，直接跳到查詢區
-  var params = new URLSearchParams(location.search);
-  if (params.has('seat') || location.hash === '#seat') {
+  if (W.seatMode) {
     if ('scrollRestoration' in history) history.scrollRestoration = 'manual';
     document.querySelectorAll('#seat .reveal').forEach(function (el) { el.classList.add('in'); });
     // 等圖片、字型載完版面穩定後再跳，並用 instant 蓋過 CSS 的 smooth scroll
@@ -167,7 +125,5 @@
     jump();
     window.addEventListener('load', jump);
   }
-  if (params.get('q')) { input.value = params.get('q'); search(); }
-
-  console.log('[wedding] 名單共 ' + SEATING.length + ' 筆、' + totalGuests + ' 位賓客');
+  if (W.initialQuery) { input.value = W.initialQuery; search(); }
 })();

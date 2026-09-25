@@ -1,5 +1,8 @@
 // 婚禮基本資料：有更新只要改這個檔案即可。
 window.WEDDING = {
+  // 網站配色：forest 森林綠／latte 奶茶暖棕／night 墨綠金
+  theme: "forest",
+
   groomEn: "鈺傑",
   brideEn: "雅雯",
   groom: "鈺傑",

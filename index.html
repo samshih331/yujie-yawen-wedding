@@ -9,6 +9,14 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Allura&family=Bodoni+Moda:ital,wght@0,400;0,500;1,400&family=Cormorant+Garamond:ital,wght@0,400;0,500;1,400&family=Noto+Serif+TC:wght@300;400;500&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="style.css">
+  <script src="config.js"></script>
+  <script>
+    // 主題：網址 ?theme=forest|latte|night 優先，否則用 config.js 的 theme
+    (function () {
+      var t = new URLSearchParams(location.search).get('theme') || (window.WEDDING || {}).theme;
+      if (['forest', 'latte', 'night'].indexOf(t) !== -1) document.documentElement.dataset.theme = t;
+    })();
+  </script>
 </head>
 <body>
 
@@ -34,7 +42,7 @@
 
   <main>
     <!-- 邀請 -->
-    <section class="section sage" id="welcome">
+    <section class="section band" id="welcome">
       <div class="col welcome">
         <h2 class="reveal">Welcome<br>to our<br>wedding</h2>
         <p class="sub reveal d1">Together with our families,<br>we invite you to celebrate with us.</p>
@@ -51,7 +59,7 @@
     </section>
 
     <!-- 倒數 -->
-    <section class="section white countdown">
+    <section class="section surface countdown">
       <div class="col">
         <p class="eyebrow reveal">Counting down</p>
         <div class="cd-row reveal d1" id="countdown">
@@ -65,7 +73,7 @@
     </section>
 
     <!-- 地點 -->
-    <section class="section sage" id="location">
+    <section class="section band" id="location">
       <div class="col loc">
         <h2 class="reveal">Location</h2>
         <p class="loc-venue reveal d1" data-cfg="venue"></p>
@@ -79,7 +87,7 @@
 
 
     <!-- 查詢桌次 -->
-    <section class="section ivory seat" id="seat">
+    <section class="section plain seat" id="seat">
       <div class="col">
         <p class="eyebrow reveal">Find your seat</p>
         <h2 class="reveal d1">查詢桌次</h2>
@@ -102,7 +110,6 @@
     <p data-cfg-pair></p>
   </footer>
 
-  <script src="config.js"></script>
   <script src="seating.js"></script>
   <script src="app.js"></script>
 </body>

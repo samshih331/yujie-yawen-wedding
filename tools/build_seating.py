@@ -29,8 +29,15 @@ def clean(v):
 
 seats = OrderedDict()                  # (table, name) -> count
 
+# 新人事後在 LINE 交代、Excel 還沒改的地方：(桌次, Excel 上的名字) -> 正確名字
+FIX = {
+    ('22', '姍姍'): '葛姍姍',            # 10/7：22 桌「姍姍、小文」改成葛姍姍 2 位
+    ('22', '小文'): '葛姍姍',
+}
+
 
 def add(table, name):
+    name = FIX.get((table, name), name)
     if name:
         seats[(table, name)] = seats.get((table, name), 0) + 1
 

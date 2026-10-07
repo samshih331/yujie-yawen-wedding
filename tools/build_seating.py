@@ -1,6 +1,6 @@
 """把新人給的 Excel 座位表轉成 seating.js。
 
-用法：~/IdeaProjects/wedding-art/.venv/bin/python tools/build_seating.py "素材/婚禮座位表(1005).xlsx"
+用法：~/IdeaProjects/wedding-art/.venv/bin/python tools/build_seating.py "素材/婚禮座位表(1006).xlsx"
 
 表格結構（工作表「婚禮邀請親友」）：
 - 第 1–14 列：主桌，名字在 M 欄
@@ -30,10 +30,8 @@ def clean(v):
 seats = OrderedDict()                  # (table, name) -> count
 
 # 新人事後在 LINE 交代、Excel 還沒改的地方：(桌次, Excel 上的名字) -> 正確名字
-FIX = {
-    ('22', '姍姍'): '葛姍姍',            # 10/7：22 桌「姍姍、小文」改成葛姍姍 2 位
-    ('22', '小文'): '葛姍姍',
-}
+# （1006 版 Excel 已自行改好 22 桌葛姍姍，目前沒有待補的修正）
+FIX = {}
 
 
 def add(table, name):

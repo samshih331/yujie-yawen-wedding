@@ -36,16 +36,12 @@
   function displayName(g) { return String(g.name).split(/\s+/)[0]; }
 
   // 回傳 { state, hits, guests, message }
-  // state: 'blank' 沒輸入 / 'pending' 名單尚未提供 / 'short' 字太少 / 'none' 查無 / 'ok'
+  // state: 'blank' 沒輸入 / 'pending' 名單尚未提供 / 'none' 查無 / 'ok'
   function find(raw) {
     var q = norm(raw || '');
     if (!q) return { state: 'blank', hits: [], guests: 0, message: '' };
     if (!SEATING.length) {
       return { state: 'pending', hits: [], guests: 0, message: '座位表整理中，婚禮前會開放查詢，敬請期待' };
-    }
-    // 只打一個字（例如只打姓）會跳出一大串人，請賓客至少打兩個字
-    if (q.length < 2) {
-      return { state: 'short', hits: [], guests: 0, message: '請輸入至少兩個字，例如完整姓名' };
     }
     var hits = index.filter(function (r) {
       return r.keys.some(function (k) { return k.indexOf(q) !== -1; });

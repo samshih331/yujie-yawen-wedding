@@ -1,12 +1,12 @@
 """把新人給的 Excel 座位表轉成 seating.js。
 
-用法：~/IdeaProjects/wedding-art/.venv/bin/python tools/build_seating.py "素材/婚禮座位表(1004).xlsx"
+用法：~/IdeaProjects/wedding-art/.venv/bin/python tools/build_seating.py "素材/婚禮座位表(1005).xlsx"
 
 表格結構（工作表「婚禮邀請親友」）：
 - 第 1–14 列：主桌，名字在 M 欄
 - 第 15 列以後：女方在 A–I 欄（桌次 B、名字 D、備註 E），男方在 J–P 欄（桌次 K、名字 M、備註 N）
   每一桌的桌次只寫在該桌第一列，往下到下一個桌次之前都算同一桌
-- 同一桌同一個名字出現幾次＝幾個座位（本人＋家人）
+- 同一桌同一個名字出現幾次＝幾個座位（本人＋家人）；名字空白但有填葷/素的座位，算上一位賓客的家人
 - 備註寫「某某(素)」表示這個座位坐的是那位賓客（名字欄是同行家人的代表）
 只輸出姓名、桌次、人數；桌名、備註、葷素、喜餅都不放上網站。
 """
@@ -38,21 +38,26 @@ def add(table, name):
 for r in range(3, 15):                 # 主桌
     add('主桌', clean(ws.cell(r, 13).value))
 
-for tcol, ncol, ecol in ((2, 4, 5), (11, 13, 14)):     # 女方、男方
-    table = None
+for tcol, ncol, ecol, fcol in ((2, 4, 5, 6), (11, 13, 14, 15)):     # 女方、男方（fcol＝葷/素）
+    table = last = None
     for r in range(17, ws.max_row + 1):
         t = ws.cell(r, tcol).value
         if isinstance(t, (int, float)):
-            table = str(int(t))
+            table, last = str(int(t)), None
         elif isinstance(t, str) and t.strip() and '不出席' in t:
             break
         if table is None:
             continue
+        name = clean(ws.cell(r, ncol).value)
         note = ws.cell(r, ecol).value
         if isinstance(note, str) and re.search(r'[（(]素[)）]', note):
             add(table, clean(note))      # 這個座位坐的是備註上的人（名字欄是同行家人的代表）
-        else:
-            add(table, clean(ws.cell(r, ncol).value))
+            last = name or last
+        elif name:
+            add(table, name)
+            last = name
+        elif last and ws.cell(r, fcol).value in ('葷', '素'):
+            add(table, last)             # 沒寫名字但有點餐的座位，算是上一位賓客的同行家人
 
 out = [{'name': n, 'table': t, 'count': c} for (t, n), c in seats.items()]
 order = lambda g: (-1 if g['table'] == '主桌' else int(g['table']))

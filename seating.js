@@ -108,6 +108,7 @@ window.SEATING = [
   {"name": "楊博舜", "table": "17", "count": 2},
   {"name": "毛琪驊", "table": "17", "count": 2},
   {"name": "張依琇", "table": "17", "count": 2},
+  {"name": "楊芝齡", "table": "17", "count": 1},
   {"name": "湯佳臻", "table": "18", "count": 2},
   {"name": "歐子恩", "table": "18", "count": 2},
   {"name": "張憶媚", "table": "18", "count": 1},

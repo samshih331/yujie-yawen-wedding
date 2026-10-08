@@ -32,6 +32,10 @@ seats = OrderedDict()                  # (table, name) -> count
 # 新人事後在 LINE 交代、Excel 還沒改的地方：(桌次, Excel 上的名字) -> 正確名字
 # （1006 版 Excel 已自行改好 22 桌葛姍姍，目前沒有待補的修正）
 FIX = {}
+# Excel 上沒有、新人在 LINE 交代要加的賓客：(桌次, 名字, 人數)
+EXTRA = [
+    ('17', '楊芝齡', 1),                 # 10/8 新娘：第 17 桌加入楊芝齡
+]
 
 
 def add(table, name):
@@ -63,6 +67,9 @@ for tcol, ncol, ecol, fcol in ((2, 4, 5, 6), (11, 13, 14, 15)):     # 女方、�
             last = name
         elif last and ws.cell(r, fcol).value in ('葷', '素'):
             add(table, last)             # 沒寫名字但有點餐的座位，算是上一位賓客的同行家人
+
+for t, n, c in EXTRA:
+    seats[(t, n)] = seats.get((t, n), 0) + c
 
 out = [{'name': n, 'table': t, 'count': c} for (t, n), c in seats.items()]
 order = lambda g: (-1 if g['table'] == '主桌' else int(g['table']))

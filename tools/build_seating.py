@@ -1,6 +1,6 @@
 """把新人給的 Excel 座位表轉成 seating.js。
 
-用法：~/IdeaProjects/wedding-art/.venv/bin/python tools/build_seating.py "素材/婚禮座位表(1008雲端).xlsx"
+用法：~/IdeaProjects/wedding-art/.venv/bin/python tools/build_seating.py "素材/婚禮座位表(1009雲端).xlsx"
 
 表格結構（工作表「婚禮邀請親友」）：
 - 第 1–14 列：主桌，名字在 M 欄

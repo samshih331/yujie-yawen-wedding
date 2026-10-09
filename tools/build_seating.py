@@ -1,6 +1,6 @@
 """把新人給的 Excel 座位表轉成 seating.js。
 
-用法：~/IdeaProjects/wedding-art/.venv/bin/python tools/build_seating.py "素材/婚禮座位表(1006).xlsx"
+用法：~/IdeaProjects/wedding-art/.venv/bin/python tools/build_seating.py "素材/婚禮座位表(1008雲端).xlsx"
 
 表格結構（工作表「婚禮邀請親友」）：
 - 第 1–14 列：主桌，名字在 M 欄
@@ -34,8 +34,12 @@ seats = OrderedDict()                  # (table, name) -> count
 FIX = {}
 # Excel 上沒有、新人在 LINE 交代要加的賓客：(桌次, 名字, 人數)
 EXTRA = [
-    ('17', '楊芝齡', 1),                 # 10/8 新娘：第 17 桌加入楊芝齡
+    # ('17', '楊芝齡', 1),               # 10/8 新娘交代；1008 雲端版 Excel 已自己加上，不再補
 ]
+
+
+# 備註裡的稱謂（同學嬤嬤、老公、二舅舅…）不是人名
+KIN = r'[嬤媽爸哥姊姐弟妹舅姨伯叔姑嬸婆爺奶孫]|老公|老婆|小孩|嬰兒|同學|朋友|座椅|餐具'
 
 
 def add(table, name):
@@ -59,7 +63,11 @@ for tcol, ncol, ecol, fcol in ((2, 4, 5, 6), (11, 13, 14, 15)):     # 女方、�
             continue
         name = clean(ws.cell(r, ncol).value)
         note = ws.cell(r, ecol).value
-        if isinstance(note, str) and re.search(r'[（(]素[)）]', note):
+        diet = ws.cell(r, fcol).value
+        # 備註寫的是坐這個位子的人：寫「某某(素)」，或（1008 版起）備註是 2～4 個字的人名、且這位點素食
+        if isinstance(note, str) and (re.search(r'[（(]素[)）]', note)
+                                      or (diet == '素' and re.fullmatch(r'[\u4e00-\u9fff]{2,4}', note.strip())
+                                          and not re.search(KIN, note))):
             add(table, clean(note))      # 這個座位坐的是備註上的人（名字欄是同行家人的代表）
             last = name or last
         elif name:
